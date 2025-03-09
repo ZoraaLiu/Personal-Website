@@ -4,11 +4,11 @@ import styles from "./Navbar.module.css";
 interface NavbarProps {
   scrollToSection: (ref: React.RefObject<HTMLElement>) => void;
   refs: {
-    homeRef: React.RefObject<HTMLElement | null>;
-    aboutRef: React.RefObject<HTMLElement | null>;
-    experienceRef: React.RefObject<HTMLElement | null>;
-    projectsRef: React.RefObject<HTMLElement | null>;
-    contactRef: React.RefObject<HTMLElement | null>;
+    homeRef: React.RefObject<HTMLElement>;
+    aboutRef: React.RefObject<HTMLElement>;
+    experienceRef: React.RefObject<HTMLElement>;
+    projectsRef: React.RefObject<HTMLElement>;
+    contactRef: React.RefObject<HTMLElement>;
   };
 }
 
