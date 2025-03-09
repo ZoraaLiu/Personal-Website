@@ -1,46 +1,53 @@
-section {
-    height: 100vh; /* Each section takes full screen height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px;
-  }
-  
-  .navbar {
+/* Navbar container */
+nav {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    background-color: rgba(110, 107, 107, 0.8);
-    color: white;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    z-index: 100;
+    width: 100%;
+    background: rgba(110, 107, 107, 0.8);; /* Dark blue with slight transparency */
+    padding: 15px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
   }
   
-  .navbar a, .navbar button {
-    text-decoration: none;
-    color: white;
+  /* Navbar list */
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Navbar links */
+  button {
     background: none;
     border: none;
+    font-size: 1.2rem;
+    color: white;
     cursor: pointer;
-    font-size: 25px;
+    transition: color 0.3s ease-in-out;
   }
   
-  .menuItems {
-    display: flex;
-    gap: 19px;
+  button:hover {
+    color: #f8c102; /* Highlight effect on hover */
   }
-
+  
+  /* Responsive Design */
   @media screen and (max-width: 768px) {
-    .menuItems {
-      flex-direction: column;
-      display: none;
+    nav {
+      padding: 10px 0;
     }
   
-    .menuOpen {
-      display: flex;
+    ul {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    button {
+      font-size: 1rem;
     }
   }
   
