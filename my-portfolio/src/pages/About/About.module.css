@@ -1,0 +1,69 @@
+.about {
+    width: 100vw;
+    min-height: auto; /* Let content define height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows content to wrap */
+    text-align: center;
+    background: white;
+    color: Black;
+    padding: 50px;
+    gap: 30px; /* Adds space between text and image */
+  }
+
+  .title {
+    font: 40
+  }
+  
+  /* Container to hold text and image */
+  .aboutContainer {
+    display: flex;
+    flex-direction: row; /* Side-by-side layout */
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows items to wrap on small screens */
+    max-width: 1200px;
+    width: 100%;
+    gap: 40px; /* Space between text and image */
+  }
+  
+  /* Ensure text scales properly */
+  .aboutText {
+    flex: 1; /* Allow text to take up available space */
+    text-align: left;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 600px;
+  }
+  
+  /* Ensure the image resizes correctly */
+  .aboutImage {
+    flex: 1;
+    max-width: 400px; /* Adjust as needed */
+    height: auto;
+  }
+  
+  .aboutImage img {
+    width: 100%; /* Image scales responsively */
+    height: auto;
+    object-fit: contain; /* Ensures full image is visible */
+    border-radius: 10px; /* Optional rounded corners */
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .aboutContainer {
+      flex-direction: column; /* Stack image and text on mobile */
+    }
+  
+    .aboutText {
+      font-size: 1rem;
+      text-align: center;
+    }
+  
+    .aboutImage {
+      max-width: 300px;
+    }
+  }
+  

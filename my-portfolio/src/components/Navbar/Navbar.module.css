@@ -1,58 +1,42 @@
-.navbar {
-    position: relative;
+section {
+    height: 100vh; /* Each section takes full screen height */
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding-top: 20px;
-    z-index: 2;
-    margin: 0 10%;
+    justify-content: center;
+    padding: 50px;
   }
   
-  .title {
-    font-size: 30px;
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--color-text);
-  }
-  
-  .menuBtn {
-    display: none;
-    cursor: pointer;
-  }
-  
-  .menu {
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(110, 107, 107, 0.8);
+    color: white;
+    padding: 15px;
     display: flex;
+    justify-content: space-between;
+    z-index: 100;
+  }
+  
+  .navbar a, .navbar button {
+    text-decoration: none;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
   }
   
   .menuItems {
     display: flex;
-    gap: 20px;
-    list-style: none;
-    transition: all 0.3s ease-in-out;
+    gap: 19px;
   }
-  
-  .menuItems a {
-    font-size: 20px;
-    color: var(--color-text);
-    text-decoration: none;
-  }
-  
-  /* Responsive Navbar */
+
   @media screen and (max-width: 768px) {
-    .menuBtn {
-      display: block;
-    }
-  
     .menuItems {
-      display: none;
       flex-direction: column;
-      background: rgba(0, 0, 0, 0.8);
-      position: absolute;
-      top: 60px;
-      right: 0;
-      width: 200px;
-      padding: 20px;
-      border-radius: 5px;
+      display: none;
     }
   
     .menuOpen {

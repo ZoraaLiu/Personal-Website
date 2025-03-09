@@ -1,0 +1,59 @@
+.contact {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: whitesmoke;
+    color: rgba(110, 107, 107, 0.8);;
+    padding: 50px;
+    overflow: hidden;
+  }
+  
+  /* Contact Info */
+  .contactInfo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 0.5s ease-out, transform 1.5s ease-out;
+  }
+  
+  /* Animation triggered when section is visible */
+  .animate {
+    opacity: 1;
+    transform: scale(1.5); /* Grow larger */
+  }
+  
+  .animate {
+    animation: growAndShrink 1.5s ease-out forwards;
+  }
+  
+  /* Keyframes for grow & shrink */
+  @keyframes growAndShrink {
+    0% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(3);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+    }
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .contact {
+      padding: 20px;
+    }
+  
+    .contactInfo {
+      font-size: 1.2rem;
+    }
+  }
+  

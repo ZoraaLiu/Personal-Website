@@ -1,0 +1,64 @@
+.experience {
+    width: 100vw;
+    padding: 50px; /* Allow content to determine height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(to right, rgb(208, 150, 168), rgb(235, 98, 141));
+    color: white;
+  }
+  
+  /* Timeline container expands naturally */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    width: 100%;
+  }
+  
+  /* Experience Card */
+  .experienceCard {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .experienceCard:hover {
+    transform: scale(1.05);
+  }
+  
+  .experienceCard h2 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+  }
+  
+  .experienceCard h3 {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+  }
+  
+  .duration {
+    font-size: 1.1rem;
+    color: #f8c102;
+  }
+  
+  .description {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .timeline {
+      width: 90%;
+    }
+  
+    .experienceCard {
+      padding: 15px;
+    }
+  }
+  

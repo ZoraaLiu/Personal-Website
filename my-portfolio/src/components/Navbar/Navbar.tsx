@@ -1,36 +1,27 @@
-import React, { useState } from "react";
-import styles from "./Navbar.module.css"; // Import the CSS module
+import React from "react";
+import styles from "./Navbar.module.css";
 
-const Navbar: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+interface NavbarProps {
+  scrollToSection: (ref: React.RefObject<HTMLElement>) => void;
+  refs: {
+    homeRef: React.RefObject<HTMLElement>;
+    aboutRef: React.RefObject<HTMLElement>;
+    experienceRef: React.RefObject<HTMLElement>;
+    projectsRef: React.RefObject<HTMLElement>;
+    contactRef: React.RefObject<HTMLElement>;
+  };
+}
 
+const Navbar: React.FC<NavbarProps> = ({ scrollToSection, refs }) => {
   return (
     <nav className={styles.navbar}>
-      <a className={styles.title} href="/">
-        Portfolio
-      </a>
-      <div className={styles.menu}>
-        {/* Mobile Menu Button */}
-        <button className={styles.menuBtn} onClick={() => setMenuOpen(!menuOpen)}>
-          ☰
-        </button>
-
-        {/* Navigation Items */}
-        <ul className={`${styles.menuItems} ${menuOpen ? styles.menuOpen : ""}`} onClick={() => setMenuOpen(false)}>
-          <li>
-            <a href="#about">About</a>
-          </li>
-          <li>
-            <a href="#experience">Experience</a>
-          </li>
-          <li>
-            <a href="#projects">Projects</a>
-          </li>
-          <li>
-            <a href="#contact">Contact</a>
-          </li>
-        </ul>
-      </div>
+      <ul className={styles.menuItems}>
+        <li><button onClick={() => scrollToSection(refs.homeRef)}>Home</button></li>
+        <li><button onClick={() => scrollToSection(refs.aboutRef)}>About</button></li>
+        <li><button onClick={() => scrollToSection(refs.experienceRef)}>Experience</button></li>
+        <li><button onClick={() => scrollToSection(refs.projectsRef)}>Projects</button></li>
+        <li><button onClick={() => scrollToSection(refs.contactRef)}>Contact</button></li>
+      </ul>
     </nav>
   );
 };
