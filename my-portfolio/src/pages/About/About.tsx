@@ -15,10 +15,13 @@ const About: React.FC = () => {
             Welcome to my portfolio! My name is <strong>Zora</strong>, and I am a third-year software engineering student at <strong>UWaterloo</strong>.
           </p>
           <p>
-            I specialize in full-stack development and have experience with Python, TypeScript, and C++.
+          I have experience working with full-stack development, machine learning, and ROS, and I enjoy creating efficient, high-performance solutions. 
           </p>
           <p>
-            In my free time, I love learning new technologies and solving complex challenges.
+          My previous internships have exposed me to a variety of technologies, including Python, TypeScript, C++, React, and Azure.
+          </p>
+          <p>
+          In my free time, I love learning new technologies and solving complex challenges. I also love making new friends and share my stories with them.
           </p>
         </div>
 
