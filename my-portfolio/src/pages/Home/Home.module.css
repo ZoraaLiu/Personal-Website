@@ -1,26 +1,59 @@
-.home {
-    position: relative; /* Ensures content stays properly positioned */
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
+  .home {
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(to right, rgb(235, 98, 141), rgb(208, 150, 168));
-    color: white;
-    padding: 0; /* Remove unnecessary padding */
-    margin: 0; /* Remove default margin */
-    overflow: hidden; /* Ensures no scrolling inside the section */
+    background: var(--hero-bg);
+    color: var(--text);
+    padding: 80px 20px 40px;
+    margin: 0;
+    overflow: hidden;
+  }
+  
+  /* Decorative animated blobs */
+  .home::before,
+  .home::after {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent), transparent 60%);
+    opacity: 0.18;
+    filter: blur(30px);
+    animation: floaty 12s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .home::before {
+    top: -120px;
+    left: -120px;
+  }
+
+  .home::after {
+    bottom: -140px;
+    right: -140px;
+    animation-duration: 16s;
+    animation-delay: -3s;
+  }
+
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-12px) scale(1.03); }
   }
   
   
   .container {
     display: flex;
-    flex-direction: row; /* Always left and right layout */
+    flex-direction: row;
     align-items: center;
-    justify-content: space-between; /* Ensure spacing */
-    gap: 50px; /* Space between image & text */
+    justify-content: space-between;
+    gap: 50px;
     width: 100%;
+    max-width: 1100px;
   }
   
   .imageContainer {
@@ -28,14 +61,37 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
   }
   
   .profileImage {
-    width: 300px; /* Adjust image size */
+    width: 300px;
     height: 300px;
-    border-radius: 50%; /* Circular Image */
+    border-radius: 24px;
     object-fit: cover;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25), 0 0 0 6px rgba(236, 72, 153, 0.12);
+  }
 
+  /* Rotating gradient ring decoration */
+  .imageContainer::before {
+    content: "";
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(236,72,153,0.0), rgba(236,72,153,0.6), rgba(236,72,153,0.0) 60%);
+    filter: blur(8px);
+    animation: spin 12s linear infinite;
+    z-index: 0;
+  }
+
+  .imageContainer > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
   
   .content {
@@ -43,51 +99,105 @@
     text-align: left;
   }
   
-  .title {
-    font-size: 3rem;
-    font-weight: 700;
+  .kicker {
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+  }
+
+  .heroTitle {
+    margin: 0 0 10px 0;
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .nameSwap {
+    position: relative;
+    white-space: nowrap;
+    display: inline-block;
   }
   
-  .title span {
-    color: #f8c102;
+  .nameFront,
+  .nameBack {
+    display: inline-block;
+    transition: opacity 0.5s ease;
+    background: linear-gradient(90deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   
+  /* By default show only nickname */
+  .nameFront { opacity: 1; }
+  .nameBack  { opacity: 0; position: absolute; left: 0; top: 0; }
+  
+  /* On hover, cross-fade */
+  .nameSwap:hover .nameFront { opacity: 0; }
+  .nameSwap:hover .nameBack  { opacity: 1; }
+  
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 8px; }
+  .badge {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.85rem;
+  }
+
   .subtitle {
-    font-size: 1.5rem;
-    margin-top: 10px;
-    opacity: 0.8;
+    font-size: 1.1rem;
+    margin-top: 8px;
+    color: var(--muted);
   }
   
-  .button {
-    margin-top: 20px;
-    padding: 12px 25px;
-    font-size: 1.2rem;
-    background: #f8c102;
-    color: #222;
-    border-radius: 25px;
+  .actions { display: flex; gap: 12px; margin-top: 18px; }
+  .cta {
+    padding: 12px 16px;
+    background: var(--accent);
+    color: #1f2937;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(236,72,153,0.25);
+  }
+  .cta:hover { filter: brightness(1.05); }
+
+  .secondaryCta {
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
   }
   
-  .button:hover {
-    background: #ffdd44;
-  }
-  
-  /* Responsive Design: Stack Image on Top in Small Screens */
-  @media screen and (max-width: 100%) {
+  /* Responsive */
+  @media screen and (max-width: 900px) {
     .container {
-      flex-direction: column; /* Change to top-bottom layout on small screens */
+      flex-direction: column;
+      text-align: center;
+      gap: 32px;
+    }
+
+    .content {
       text-align: center;
     }
-  
-    .imageContainer {
-      margin-bottom: 20px;
-    }
-  
+
     .profileImage {
-      width: 180px;
-      height: 180px;
+      width: 220px;
+      height: 220px;
+      border-radius: 16px;
+    }
+
+    .heroTitle { font-size: 2.4rem; }
+
+    .subtitle {
+      font-size: 1rem;
     }
   }
+
   

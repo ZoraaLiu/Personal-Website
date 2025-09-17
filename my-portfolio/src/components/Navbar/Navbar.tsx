@@ -9,9 +9,11 @@ interface NavbarProps {
     experienceRef: React.RefObject<HTMLElement | null>;
     contactRef: React.RefObject<HTMLElement | null>;
   };
+  theme?: "light" | "dark";
+  onToggleTheme?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ scrollToSection, refs }) => {
+const Navbar: React.FC<NavbarProps> = ({ scrollToSection, refs, theme = "dark", onToggleTheme }) => {
   return (
     <nav className={styles.navbar}>
       <ul className={styles.menuItems}>
@@ -20,6 +22,13 @@ const Navbar: React.FC<NavbarProps> = ({ scrollToSection, refs }) => {
         <li><button onClick={() => refs.experienceRef.current && scrollToSection(refs.experienceRef)}>Experience</button></li>
         <li><button onClick={() => refs.contactRef.current && scrollToSection(refs.contactRef)}>Contact</button></li>
       </ul>
+      <div className={styles.themeToggleWrap}>
+        <button aria-label="Toggle theme" onClick={onToggleTheme} className={styles.themeToggle}>
+          <span className={styles.bulb} aria-hidden>
+            {theme === 'dark' ? '💡' : '🕯️'}
+          </span>
+        </button>
+      </div>
     </nav>
   );
 };

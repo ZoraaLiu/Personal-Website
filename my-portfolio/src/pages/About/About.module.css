@@ -1,69 +1,77 @@
 .about {
     width: 100vw;
-    min-height: auto; /* Let content define height */
+    background: var(--bg);
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap; /* Allows content to wrap */
-    text-align: center;
-    background: white;
-    color: Black;
-    padding: 50px;
-    gap: 30px; /* Adds space between text and image */
+    padding: 80px 20px;
   }
 
-  .title {
-    font: 40
+  .title h1 {
+    font-size: 2rem;
+    margin: 0 0 16px 0;
   }
   
   /* Container to hold text and image */
   .aboutContainer {
     display: flex;
-    flex-direction: row; /* Side-by-side layout */
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap; /* Allows items to wrap on small screens */
-    max-width: 1200px;
+    max-width: 1100px;
     width: 100%;
-    gap: 40px; /* Space between text and image */
+    gap: 48px;
   }
   
   /* Ensure text scales properly */
   .aboutText {
-    flex: 1; /* Allow text to take up available space */
+    flex: 1;
     text-align: left;
-    font-size: 1.2rem;
-    line-height: 1.8;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--muted);
     max-width: 600px;
   }
   
   /* Ensure the image resizes correctly */
   .aboutImage {
     flex: 1;
-    max-width: 400px; /* Adjust as needed */
+    max-width: 420px;
     height: auto;
   }
   
   .aboutImage img {
-    width: 100%; /* Image scales responsively */
+    width: 100%;
     height: auto;
-    object-fit: contain; /* Ensures full image is visible */
-    border-radius: 10px; /* Optional rounded corners */
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
   }
   
   /* Responsive Design */
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 900px) {
     .aboutContainer {
-      flex-direction: column; /* Stack image and text on mobile */
+      flex-direction: column;
+      gap: 28px;
     }
-  
+
     .aboutText {
       font-size: 1rem;
       text-align: center;
     }
-  
+
     .aboutImage {
-      max-width: 300px;
+      max-width: 320px;
     }
   }
   
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 8px; }
+  .badge {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.85rem;
+  }

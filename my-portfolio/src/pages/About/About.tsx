@@ -12,17 +12,21 @@ const About: React.FC = () => {
             <h1>About Me</h1>
           </div>
           <p>
-            Welcome to my portfolio! My name is <strong>Zora</strong>, and I am a third-year software engineering student at <strong>UWaterloo</strong>.
+          Welcome to my portfolio! My name is <strong>Zora</strong>, and I am a third-year software engineering student at <strong>UWaterloo</strong>.
           </p>
           <p>
-          I have experience working with full-stack development, machine learning, and ROS, and I enjoy creating efficient, high-performance solutions. 
+          I have experience working with fullstack development, machine learning, and robotics, and I enjoy creating efficient, high-performance solutions. 
           </p>
           <p>
-          My previous internships have exposed me to a variety of technologies, including Python, TypeScript, C++, React, and Azure.
+          Outside of school and work, I spend time on hobbies that keep me creative and balanced
           </p>
-          <p>
-          In my free time, I love learning new technologies and solving complex challenges. I also love making new friends and share my stories with them.
-          </p>
+          <div className={styles.badges}>
+            <span className={styles.badge}>🎵 music</span>
+            <span className={styles.badge}>🍳 cooking</span>
+            <span className={styles.badge}>🏸 badminton</span>
+            <span className={styles.badge}>✈️ traveling</span>
+            <span className={styles.badge}>📷 photography</span>
+          </div>
         </div>
 
         <div className={styles.aboutImage}>

@@ -1,12 +1,12 @@
-.experience {
+  .experience {
     width: 100vw;
-    padding: 50px; /* Allow content to determine height */
+    padding: 80px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    background: linear-gradient(to right, rgb(208, 150, 168), rgb(235, 98, 141));
-    color: white;
+    background: var(--experience-bg);
+    color: var(--text);
   }
   
   /* Timeline container expands naturally */
@@ -14,51 +14,85 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 800px;
+    max-width: 900px;
     width: 100%;
   }
   
   /* Experience Card */
   .experienceCard {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--card);
     padding: 20px;
-    border-radius: 10px;
-    transition: transform 0.3s ease-in-out;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+    overflow: hidden;
   }
   
   .experienceCard:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+    border-color: rgba(236, 72, 153, 0.35);
+  }
+
+  /* subtle animated highlight */
+  .experienceCard::after {
+    content: "";
+    position: absolute;
+    left: -20%;
+    top: -20%;
+    width: 60%;
+    height: 140%;
+    background: radial-gradient(closest-side, rgba(236, 72, 153, 0.15), transparent 70%);
+    transform: rotate(25deg);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .experienceCard:hover::after {
+    opacity: 1;
   }
   
+.headerRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
   .experienceCard h2 {
-    font-size: 1.8rem;
-    margin-bottom: 5px;
+    font-size: 1.4rem;
+  margin: 0 0 6px 0;
   }
   
   .experienceCard h3 {
-    font-size: 1.5rem;
-    opacity: 0.8;
-    margin-bottom: 10px;
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin: 0 0 10px 0;
   }
   
-  .duration {
-    font-size: 1.1rem;
-    color: #f8c102;
-  }
+.duration {
+  font-size: 0.95rem;
+  color: var(--accent);
+  white-space: nowrap;
+  z-index: 1;
+}
   
   .description {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: var(--muted);
   }
   
   /* Responsive Design */
   @media screen and (max-width: 768px) {
     .timeline {
-      width: 90%;
+      width: 92%;
     }
-  
+
     .experienceCard {
-      padding: 15px;
+      padding: 16px;
     }
   }
   

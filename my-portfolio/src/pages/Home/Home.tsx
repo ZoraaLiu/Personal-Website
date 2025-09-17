@@ -17,18 +17,26 @@ const Home: React.FC = () => {
   return (
     <section className={styles.home} style={{ height: `${windowHeight}px` }}>
       <div className={styles.container}>
-        {/* Left Side - Profile Image */}
         <div className={styles.imageContainer}>
-          <img src={profileImg} alt="My Profile" className={styles.profileImage} />
+          <img src={profileImg} alt="Zora Liu profile" className={styles.profileImage} />
         </div>
 
-        {/* Right Side - Text Content */}
         <div className={styles.content}>
-        <h1 className={styles.title}>HI<span>/</span>HI<span>/</span>HI</h1>
-        <h1 className={styles.title}>THIS<span>/</span>IS<span>/</span>ZORA</h1>
-        <h1 className={styles.title}>THIS<span>/</span>IS<span>/</span>ZORA</h1>
-        <h1 className={styles.title}>THIS<span>/</span>IS<span>/</span>ZORA</h1>
-        <p className={styles.subtitle}>Check out my introduction and experience below.</p>
+          <p className={styles.kicker}>Hello, I’m</p>
+          <h1 className={styles.heroTitle}>
+            <span className={styles.nameSwap}>
+              <span className={styles.nameFront}>Shixiao Liu</span>
+              <span className={styles.nameBack}>Zora Liu</span>
+            </span>
+          </h1>
+          <div className={styles.badges}>
+            <span className={styles.badge}>Code & Create</span>
+            <span className={styles.badge}>Curious Mind</span>
+          </div>
+          <div className={styles.actions}>
+            <a className={styles.cta} href="#experience">View Experience</a>
+            <a className={styles.secondaryCta} href="#contact">Get in touch</a>
+          </div>
         </div>
       </div>
     </section>

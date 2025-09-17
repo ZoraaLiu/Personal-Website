@@ -1,53 +1,104 @@
-/* Navbar container */
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(110, 107, 107, 0.8);; /* Dark blue with slight transparency */
-    padding: 15px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+/* Scoped Navbar styles */
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--navbar-bg);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  padding: 12px 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--navbar-border);
+}
+
+.menuItems {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItems button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  position: relative;
+}
+
+.menuItems button:hover {
+  color: var(--accent);
+  background-color: var(--hover-bg);
+}
+
+.menuItems button::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 4px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.menuItems button:hover::after {
+  transform: scaleX(1);
+}
+
+/* Theme toggle */
+.themeToggleWrap {
+  position: absolute;
+  right: 16px;
+  top: 8px;
+}
+
+.themeToggle {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.themeToggle:hover {
+  filter: brightness(1.05);
+}
+
+.bulb {
+  display: inline-block;
+  filter: drop-shadow(0 0 0 rgba(0,0,0,0));
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+[data-theme="light"] .bulb {
+  filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.65));
+}
+
+.themeToggle:hover .bulb {
+  transform: translateY(-1px) rotate(-4deg);
+}
+
+@media screen and (max-width: 768px) {
+  .menuItems {
+    gap: 16px;
   }
-  
-  /* Navbar list */
-  ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    padding: 0;
-    margin: 0;
+
+  .menuItems button {
+    font-size: 0.95rem;
+    padding: 8px;
   }
-  
-  /* Navbar links */
-  button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    color: white;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
-  }
-  
-  button:hover {
-    color: #f8c102; /* Highlight effect on hover */
-  }
-  
-  /* Responsive Design */
-  @media screen and (max-width: 768px) {
-    nav {
-      padding: 10px 0;
-    }
-  
-    ul {
-      flex-direction: column;
-      gap: 15px;
-    }
-  
-    button {
-      font-size: 1rem;
-    }
-  }
+}
   

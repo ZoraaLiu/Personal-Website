@@ -1,3 +1,4 @@
+// Contact.tsx
 import React, { useEffect, useState, useRef } from "react";
 import styles from "./Contact.module.css";
 
@@ -11,25 +12,45 @@ const Contact: React.FC = () => {
         const entry = entries[0];
         setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.5 } // Trigger when 50% of the section is visible
+      { threshold: 0.3 } // Trigger earlier for smoother effect
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    if (sectionRef.current) observer.observe(sectionRef.current);
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
     };
   }, []);
 
   return (
-    <section ref={sectionRef} className={styles.contact}>
-      <h1 className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>Get in Touch</h1>
-      <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>Email: z25liu@uwaterloo.ca</p>
-      <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>Phone: +1 437-262-6990</p>
+    <section ref={sectionRef} className={styles.contact} id="contact">
+      <h1 className={`${styles.heading} ${isVisible ? styles.animate : ""}`}>
+        Get in Touch
+      </h1>
+      <p className={`${styles.subText} ${isVisible ? styles.animate : ""}`}>
+        I’d love to connect! Feel free to reach out through any of the channels below:
+      </p>
+      <div className={styles.infoBox}>
+        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
+          📧 <a href="mailto:zoraliu658@gmail.com">zoraliu658@gmail.com</a>
+        </p>
+        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
+          📧 <a href="mailto:z25liu@uwaterloo.ca">z25liu@uwaterloo.ca</a>
+        </p>
+        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
+          📱 <a href="tel:+14372626990">+1 (437) 262-6990</a>
+        </p>
+        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
+          💼 <a href="https://www.linkedin.com/in/zora-liu-180206236/" target="_blank" rel="noopener noreferrer">
+            LinkedIn
+          </a>
+        </p>
+        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
+          💻 <a href="https://github.com/zoraaliu" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+        </p>
+      </div>
     </section>
   );
 };

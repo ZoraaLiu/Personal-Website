@@ -1,0 +1,141 @@
+.wrap {
+  width: 100%;
+  position: relative;
+  height: 0; /* overlay, no layout gap */
+  z-index: 950;
+  pointer-events: none;
+}
+
+.line { display: none; }
+
+.hangers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 6vw;
+}
+
+.hanger {
+  width: 1px;
+  height: 140px; /* default; per-item overrides inline */
+  background: var(--navbar-border);
+  position: relative;
+  animation: sway 5s ease-in-out infinite;
+  transform-origin: top center;
+  opacity: 0.7;
+}
+
+.h1 { animation-delay: 0s; }
+.h2 { animation-delay: 0.6s; }
+.h3 { animation-delay: 1.2s; }
+
+.bauble {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--navbar-bg) inset;
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+/* Theme-specific ornament appearances */
+[data-theme="dark"] .bauble {
+  background: radial-gradient(circle at 40% 35%, #fff, rgba(255,255,255,0.2));
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+[data-theme="light"] .bauble {
+  background: #ec4899;
+  filter: drop-shadow(0 0 8px rgba(236,72,153,0.55));
+  border-radius: 0;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+/* Heart shape using pseudo-elements in light mode */
+[data-theme="light"] .bauble::before,
+[data-theme="light"] .bauble::after {
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  background: #ec4899;
+  border-radius: 50%;
+}
+
+[data-theme="light"] .bauble::before {
+  left: -18px;
+  top: 0;
+}
+
+[data-theme="light"] .bauble::after {
+  left: 0;
+  top: -18px;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .hangers { padding: 6px 4vw; }
+  .hanger { height: 110px; }
+  .bauble { width: 28px; height: 28px; bottom: -14px; }
+}
+
+/* Shooting stars (dark mode only) */
+.stars {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 100vw;
+  max-width: 1200px;
+  height: 80px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.shootingStar {
+  position: absolute;
+  top: 20px;
+  left: -10%;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 6px #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate3d(0,0,0);
+}
+
+.shootingStar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120px;
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.8));
+}
+
+[data-theme="dark"] .stars { display: block; }
+[data-theme="light"] .stars { display: none; }
+
+@keyframes shoot {
+  0% { opacity: 0; transform: translate3d(0,0,0); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(140vw, -40px, 0); }
+}
+
+
