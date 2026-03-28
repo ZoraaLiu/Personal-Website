@@ -6,7 +6,6 @@ import Experience from "./pages/Experience/Experience";
 import Contact from "./pages/Contacts/Contact";
 import Footer from "./components/Footer";
 import WaveDivider from "./components/WaveDivider";
-import NavbarDecor from "./components/NavbarDecor/NavbarDecor";
 
 type Theme = "light" | "dark";
 
@@ -45,7 +44,6 @@ const App: React.FC = () => {
   return (
     <div>
       <Navbar scrollToSection={scrollToSection} refs={{ homeRef, aboutRef, experienceRef, contactRef }} theme={theme} onToggleTheme={toggleTheme} />
-      <NavbarDecor />
 
       <section id="home" ref={homeRef}><Home /></section>
       <WaveDivider />
