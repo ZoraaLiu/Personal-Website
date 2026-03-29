@@ -1,6 +1,6 @@
-import React, { useEffect, useState }from "react";
-import styles from "./Home.module.css"; // Import CSS module
-import profileImg from "../../assets/profile.jpg"; // Replace with your image
+import React, { useEffect, useState } from "react";
+import styles from "./Home.module.css";
+import CraneMachine3D from "../../components/CraneMachine3D/CraneMachine3D";
 
 const Home: React.FC = () => {
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -17,12 +17,12 @@ const Home: React.FC = () => {
   return (
     <section className={styles.home} style={{ height: `${windowHeight}px` }}>
       <div className={styles.container}>
-        <div className={styles.imageContainer}>
-          <img src={profileImg} alt="Zora Liu profile" className={styles.profileImage} />
+        <div className={styles.sceneContainer}>
+          <CraneMachine3D />
         </div>
 
         <div className={styles.content}>
-          <p className={styles.kicker}>Hello, I’m</p>
+          <p className={styles.kicker}>Hello, I'm</p>
           <h1 className={styles.heroTitle}>
             <span className={styles.nameSwap}>
               <span className={styles.nameFront}>Shixiao Liu</span>
