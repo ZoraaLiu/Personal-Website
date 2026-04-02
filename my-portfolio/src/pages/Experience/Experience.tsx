@@ -1,52 +1,48 @@
 import React from "react";
 import styles from "./Experience.module.css";
+import ExperienceSection from "./ExperienceSection";
+import EducationSection from "./EducationSection";
+import { experiences } from "../../db/experience";
+import { education } from "../../db/education";
 
-const experiences = [
-  {
-    company: "MovableInk 📨",
-    role: "Software Engineer Intern",
-    duration: "Apr. 2025 - Aug. 2025",
-    description: 
-    "Worked on backend && API developemnt",
-  },
-  {
-    company: "OTTO by Rockwell 🤖",
-    role: "Software Engineer Intern",
-    duration: "Sep. 2024 - Dec. 2024",
-    description: 
-    "Worked on OS Team, contributed to robot diagnostics aggregator and command-line tools",
-  },
-  {
-    company: "Arcelormittal Tailored Blanks 🛠️",
-    role: "Software Engineer Intern",
-    duration: "Jan. 2024 – Apr. 2024",
-    description: "Deployed YOLOv8 and create data piplines to enabling real-time steel blank detection for quantity monitoring",
-  },
-  {
-    company: "Hanjie Technology Co Ltd ⚙️",
-    role: "Software Engineer Intern",
-    duration: "May 2023 – Aug. 2023",
-    description: "Built a React + TypeScript dashboard for real-time data visualization",
-  },
+const DOT_COLORS = ['#f472b6', '#38bdf8', '#a78bfa', '#34d399'];
+
+const allDots = [
+  ...experiences.map((exp, i) => ({
+    id: `experience-${i}`,
+    label: `${exp.company} — ${exp.role}`,
+    color: DOT_COLORS[i % DOT_COLORS.length],
+  })),
+  ...education.map((edu, i) => ({
+    id: `education-${i}`,
+    label: `${edu.school} — ${edu.title}`,
+    color: '#34d399',
+  })),
 ];
 
-const Experience: React.FC = () => {
+export function Experience() {
   return (
     <section className={styles.experience}>
-      <div className={styles.timeline}>
-        {experiences.map((exp, index) => (
-          <div key={index} className={styles.experienceCard}>
-            <div className={styles.headerRow}>
-              <h2>{exp.company}</h2>
-              <span className={styles.duration}>{exp.duration}</span>
-            </div>
-            <h3>{exp.role}</h3>
-            <p className={styles.description}>{exp.description}</p>
-          </div>
-        ))}
+      <div className={styles.pageWrapper}>
+        <div className={styles.timelineBar}>
+          <div className={styles.timelineLine} />
+          {allDots.map((dot, index) => (
+            <button
+              key={index}
+              className={styles.timelineDot}
+              style={{ '--dot-color': dot.color } as React.CSSProperties}
+              title={dot.label}
+              onClick={() => document.getElementById(dot.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+            />
+          ))}
+        </div>
+        <div className={styles.pageContent}>
+          <ExperienceSection />
+          <EducationSection />
+        </div>
       </div>
     </section>
   );
-};
+}
 
 export default Experience;
