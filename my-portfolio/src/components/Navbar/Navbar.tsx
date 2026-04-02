@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./Navbar.module.css"; // Import CSS module
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 interface NavbarProps {
   scrollToSection: (ref: React.RefObject<HTMLElement | null>) => void; // Allow null
@@ -25,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ scrollToSection, refs, theme = "dark", 
       <div className={styles.themeToggleWrap}>
         <button aria-label="Toggle theme" onClick={onToggleTheme} className={styles.themeToggle}>
           <span className={styles.bulb} aria-hidden>
-            {theme === 'dark' ? '💡' : '🕯️'}
+            {theme === 'dark' ? <DarkModeIcon></DarkModeIcon> : <LightModeIcon/>}
           </span>
         </button>
       </div>

@@ -1,55 +1,113 @@
-// Contact.tsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import styles from "./Contact.module.css";
+import ScienceIcon from '@mui/icons-material/Science';
+import EmailIcon from '@mui/icons-material/Email';
+import BoltIcon from '@mui/icons-material/Bolt';
+
+const TOPICS = [
+  "Full-Stack Web Development",
+  "Machine Learning / AI",
+  "Robotics & Embedded Systems",
+  "Open Source Collaboration",
+  "Just saying hi 👋",
+];
 
 const Contact: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.3 } // Trigger earlier for smoother effect
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-
-    return () => {
-      if (sectionRef.current) observer.unobserve(sectionRef.current);
-    };
-  }, []);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
-    <section ref={sectionRef} className={styles.contact} id="contact">
-      <h1 className={`${styles.heading} ${isVisible ? styles.animate : ""}`}>
-        Get in Touch
-      </h1>
-      <p className={`${styles.subText} ${isVisible ? styles.animate : ""}`}>
-        I’d love to connect! Feel free to reach out through any of the channels below:
-      </p>
-      <div className={styles.infoBox}>
-        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
-          📧 <a href="mailto:zoraliu658@gmail.com">zoraliu658@gmail.com</a>
-        </p>
-        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
-          📧 <a href="mailto:z25liu@uwaterloo.ca">z25liu@uwaterloo.ca</a>
-        </p>
-        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
-          📱 <a href="tel:+14372626990">+1 (437) 262-6990</a>
-        </p>
-        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
-          💼 <a href="https://www.linkedin.com/in/zora-liu-180206236/" target="_blank" rel="noopener noreferrer">
-            LinkedIn
-          </a>
-        </p>
-        <p className={`${styles.contactInfo} ${isVisible ? styles.animate : ""}`}>
-          💻 <a href="https://github.com/zoraaliu" target="_blank" rel="noopener noreferrer">
-            GitHub
-          </a>
-        </p>
+    <section className={styles.contact} id="contact">
+      <div className={styles.container}>
+
+        {/* ── Left column ── */}
+        <div className={styles.left}>
+          <p className={styles.kicker}>GET IN TOUCH</p>
+          <h1 className={styles.heading}>
+            Let's <span className={styles.accent}>chat.</span>
+          </h1>
+          <p className={styles.subText}>
+            Have a project in mind or just want to talk about systems,
+            robots, or cool ideas? My inbox is always open.
+          </p>
+
+          <div className={styles.labCard}>
+            <div className={styles.labCardDots}>
+              <span /><span /><span />
+            </div>
+            <div className={styles.labCardBody}>
+              <div className={styles.labIconWrap}>
+                <ScienceIcon style={{ fontSize: '2rem', color: 'var(--accent)' }} />
+              </div>
+              <p className={styles.labCardTitle}>Experimental Phase</p>
+              <p className={styles.labCardSub}>ALWAYS ITERATING ON IDEAS</p>
+            </div>
+          </div>
+
+          <div className={styles.emailRow}>
+            <EmailIcon fontSize="small" style={{ color: 'var(--secondary)' }} />
+            <div>
+              <span className={styles.emailLabel}>EMAIL ME</span>
+              <a className={styles.emailLink} href="mailto:zoraliu658@gmail.com">
+                zoraliu658@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Right column – form ── */}
+        <div className={styles.right}>
+          {submitted ? (
+            <div className={styles.successMsg}>
+              <BoltIcon style={{ color: 'var(--accent)', fontSize: '2.5rem' }} />
+              <h2>Message transmitted!</h2>
+              <p>I'll get back to you soon.</p>
+            </div>
+          ) : (
+            <form className={styles.form} onSubmit={handleSubmit}>
+              <div className={styles.row}>
+                <div className={styles.field}>
+                  <label className={styles.label}>WHAT'S YOUR NAME?</label>
+                  <input className={styles.input} type="text" placeholder="Ada Lovelace" required />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>EMAIL ADDRESS</label>
+                  <input className={styles.input} type="email" placeholder="ada@lab.com" required />
+                </div>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>WHAT CAN WE BUILD TOGETHER?</label>
+                <select className={styles.select}>
+                  {TOPICS.map(t => <option key={t}>{t}</option>)}
+                </select>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>PROJECT DETAILS</label>
+                <textarea
+                  className={styles.textarea}
+                  rows={5}
+                  placeholder="Tell me about your vision, the scope, and the challenges..."
+                />
+              </div>
+
+              <button type="submit" className={styles.submitBtn}>
+                Transmit Data <BoltIcon fontSize="small" />
+              </button>
+
+              <div className={styles.formFooter}>
+                <span>ENCRYPTION ACTIVE</span>
+                <span>REF: LAB-{new Date().getFullYear()}</span>
+              </div>
+            </form>
+          )}
+        </div>
+
       </div>
     </section>
   );

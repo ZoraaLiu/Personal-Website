@@ -1,0 +1,9 @@
+Experience Card
+- Header
+    - BadgeGroup
+    - Role
+    - Company
+    - Location/Time
+- Description
+- TechStack
+    - TagTags

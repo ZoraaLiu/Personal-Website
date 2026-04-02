@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: var(--hero-bg);
+    background: var(--bg);
     color: var(--text);
     padding: 80px 20px 40px;
     margin: 0;
