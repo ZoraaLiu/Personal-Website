@@ -25,8 +25,8 @@ const Home: React.FC = () => {
           <p className={styles.kicker}>Hello, I'm</p>
           <h1 className={styles.heroTitle}>
             <span className={styles.nameSwap}>
-              <span className={styles.nameFront}>Shixiao Liu</span>
-              <span className={styles.nameBack}>Zora Liu</span>
+              <span className={styles.nameFront}>Zora Liu</span>
+              <span className={styles.nameBack}>Shixiao Liu</span>
             </span>
           </h1>
           <div className={styles.badges}>

@@ -1,6 +1,9 @@
 import styles from "./About.module.css";
 import img1 from "../../assets/851679844716_.pic.jpg";
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import CreateIcon from '@mui/icons-material/Create';
+import InterestsIcon from '@mui/icons-material/Interests';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 const SKILLS = [
   { label: "Fullstack Development", pct: 88 },
@@ -63,9 +66,9 @@ const About: React.FC = () => {
         {/* ── Right column – photo card ── */}
         <div className={styles.right}>
           {/* floating decorations */}
-          <span className={styles.decoTL} aria-hidden>✏️</span>
-          <span className={styles.decoR}  aria-hidden>🩷</span>
-          <span className={styles.decoBR} aria-hidden>✦</span>
+          <span className={styles.decoTL} aria-hidden><CreateIcon/></span>
+          <span className={styles.decoR}  aria-hidden><InterestsIcon/></span>
+          <span className={styles.decoBR} aria-hidden><AutoAwesomeIcon/></span>
 
           <div className={styles.photoCard}>
             <img src={img1} alt="Zora Liu" className={styles.photo} />
