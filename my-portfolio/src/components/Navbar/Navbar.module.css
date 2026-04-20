@@ -84,7 +84,7 @@
 }
 
 [data-theme="light"] .bulb {
-  filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.65));
+  filter: drop-shadow(0 0 6px var(--accent-glow-strong));
 }
 
 .themeToggle:hover .bulb {
@@ -92,13 +92,24 @@
 }
 
 @media screen and (max-width: 768px) {
+  /* Reserve space so centered links do not sit under the theme toggle */
+  .navbar {
+    padding: 12px 5rem 12px 12px;
+  }
+
+  .themeToggleWrap {
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .menuItems {
-    gap: 16px;
+    gap: 14px;
   }
 
   .menuItems button {
-    font-size: 0.95rem;
-    padding: 8px;
+    font-size: 0.9rem;
+    padding: 8px 6px;
   }
 }
   

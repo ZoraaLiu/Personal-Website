@@ -116,7 +116,7 @@
   text-decoration: none;
   font-weight: 700;
   font-size: 0.95rem;
-  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.28);
+  box-shadow: 0 6px 18px var(--accent-shadow);
   transition: filter 0.2s ease;
 }
 .cta:hover { filter: brightness(1.08); }
@@ -204,7 +204,7 @@
   top: 8px;
   left: 8px;
   font-size: 1.8rem;
-  filter: drop-shadow(0 0 6px rgba(236,72,153,0.5));
+  filter: drop-shadow(0 0 6px var(--accent-glow));
   animation: wobble 4s ease-in-out infinite;
   z-index: 2;
 }
@@ -214,7 +214,7 @@
   right: 4px;
   top: 50%;
   font-size: 1.4rem;
-  filter: drop-shadow(0 0 6px rgba(236,72,153,0.6));
+  filter: drop-shadow(0 0 6px var(--accent-glow-strong));
   animation: wobble 5s ease-in-out infinite reverse;
   z-index: 2;
 }
@@ -225,7 +225,7 @@
   right: 10px;
   font-size: 1.6rem;
   color: var(--secoundy-header);
-  filter: drop-shadow(0 0 8px rgba(56,189,248,0.7));
+  filter: drop-shadow(0 0 8px var(--secondary-soft));
   animation: wobble 3.5s ease-in-out infinite;
   z-index: 2;
 }

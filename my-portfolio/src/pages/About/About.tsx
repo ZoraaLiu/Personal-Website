@@ -5,9 +5,12 @@ import CreateIcon from '@mui/icons-material/Create';
 import InterestsIcon from '@mui/icons-material/Interests';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
-const SKILLS = [
-  { label: "Fullstack Development", pct: 88 },
-  { label: "Systems & Robotics", pct: 75 },
+const Personality_Traits = [
+  { label: "Extraverted", pct: 61 },
+  { label: "Intuitive", pct: 82 },
+  { label: "Feeling", pct: 59 },
+  { label: "Prospecting", pct: 61 },
+  { label: "Turbulent", pct: 94 },
 ];
 
 const STATS = [
@@ -36,7 +39,7 @@ const About: React.FC = () => {
           actually pleasant to work with.
           </p>
           <div className={styles.skills}>
-            {SKILLS.map(({ label, pct }) => (
+            {Personality_Traits.map(({ label, pct }) => (
               <div key={label} className={styles.skillRow}>
                 <div className={styles.skillMeta}>
                   <span>{label}</span>
@@ -50,8 +53,8 @@ const About: React.FC = () => {
           </div>
 
           <div className={styles.actions}>
-            <a href="/resume.pdf" target="_blank" className={styles.cta}>Download CV</a>
-            <a href="#experience" className={styles.secondaryCta}>View journey</a>
+            <a href="#experience" className={styles.cta}>View journey</a>
+            <a href="#project" className={styles.secondaryCta}>View project</a>
           </div>
         </div>
 

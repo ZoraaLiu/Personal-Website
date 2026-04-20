@@ -84,7 +84,7 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: linear-gradient(to bottom, #f472b6, #38bdf8, #a78bfa, #34d399);
+    background: linear-gradient(to bottom, var(--accent), var(--secondary), var(--tertiary), var(--quaternary));
     opacity: 0.4;
     border-radius: 2px;
   }
@@ -136,7 +136,7 @@
   .experienceCard:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(0,0,0,0.2);
-    border-color: rgba(236, 72, 153, 0.35);
+    border-color: var(--accent-shadow);
   }
 
   /* subtle animated highlight */
@@ -147,7 +147,7 @@
     top: -20%;
     width: 60%;
     height: 140%;
-    background: radial-gradient(closest-side, rgba(236, 72, 153, 0.15), transparent 70%);
+    background: radial-gradient(closest-side, var(--accent-soft), transparent 70%);
     transform: rotate(25deg);
     transition: opacity 0.3s ease;
     opacity: 0;
@@ -247,7 +247,7 @@
     top: -20%;
     width: 60%;
     height: 140%;
-    background: radial-gradient(closest-side, rgba(56, 189, 248, 0.12), transparent 70%);
+    background: radial-gradient(closest-side, var(--secondary-soft), transparent 70%);
     transform: rotate(25deg);
     transition: opacity 0.3s ease;
     opacity: 0;
