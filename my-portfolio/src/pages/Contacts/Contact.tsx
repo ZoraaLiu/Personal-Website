@@ -3,6 +3,9 @@ import styles from "./Contact.module.css";
 import ScienceIcon from '@mui/icons-material/Science';
 import EmailIcon from '@mui/icons-material/Email';
 import BoltIcon from '@mui/icons-material/Bolt';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const TOPICS = [
   "Career Opportunity",
@@ -49,9 +52,32 @@ const Contact: React.FC = () => {
           <div className={styles.emailRow}>
             <EmailIcon fontSize="small" style={{ color: 'var(--secondary)' }} />
             <div>
-              <span className={styles.emailLabel}>EMAIL ME</span>
+              <span className={styles.emailLabel}>EMAIL</span>
               <a className={styles.emailLink} href="mailto:zoraliu658@gmail.com">
                 zoraliu658@gmail.com
+              </a>
+            </div>
+            <PhoneIphoneIcon fontSize="small" style={{ color: 'var(--accent)' }} />
+            <div>
+              <span className={styles.emailLabel}>Phone</span>
+              <div className={styles.emailLink} style={{ color: 'var(--accent)' }}>
+                +1 437 262 6990
+              </div>
+            </div>
+          </div>
+          <div className={styles.emailRow}>
+            <LinkedInIcon fontSize="small" style={{ color: 'var(--secondary)' }} />
+            <div> 
+              <span className={styles.emailLabel}>Linkedin</span>
+              <a className={styles.emailLink} href="https://www.linkedin.com/in/zora-liu-180206236/" style={{ color: 'var(--secondary)' }}>
+                @Zora Liu
+              </a>
+            </div>
+            <GitHubIcon fontSize="small" style={{ color: 'var(--accent)' }} />
+            <div>
+              <span className={styles.emailLabel}>Github</span>
+              <a className={styles.emailLink} href="https://github.com/zoraaliu" style={{ color: 'var(--accent)' }}>
+                @ZoraaLiu
               </a>
             </div>
           </div>
