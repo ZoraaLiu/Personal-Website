@@ -5,9 +5,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import BoltIcon from '@mui/icons-material/Bolt';
 
 const TOPICS = [
-  "Full-Stack Web Development",
-  "Machine Learning / AI",
-  "Robotics & Embedded Systems",
+  "Career Opportunity",
+  "Project Ideas",
   "Open Source Collaboration",
   "Just saying hi 👋",
 ];
@@ -31,8 +30,7 @@ const Contact: React.FC = () => {
             Let's <span className={styles.accent}>chat.</span>
           </h1>
           <p className={styles.subText}>
-            Have a project in mind or just want to talk about systems,
-            robots, or cool ideas? My inbox is always open.
+            Have a project in mind or just want to talk? My inbox is always open.
           </p>
 
           <div className={styles.labCard}>
@@ -72,23 +70,23 @@ const Contact: React.FC = () => {
               <div className={styles.row}>
                 <div className={styles.field}>
                   <label className={styles.label}>WHAT'S YOUR NAME?</label>
-                  <input className={styles.input} type="text" placeholder="Ada Lovelace" required />
+                  <input className={styles.input} type="text" required />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>EMAIL ADDRESS</label>
-                  <input className={styles.input} type="email" placeholder="ada@lab.com" required />
+                  <input className={styles.input} type="email" required />
                 </div>
               </div>
 
               <div className={styles.field}>
-                <label className={styles.label}>WHAT CAN WE BUILD TOGETHER?</label>
+                <label className={styles.label}>WHAT DO YOU WANT TO SHARE?</label>
                 <select className={styles.select}>
                   {TOPICS.map(t => <option key={t}>{t}</option>)}
                 </select>
               </div>
 
               <div className={styles.field}>
-                <label className={styles.label}>PROJECT DETAILS</label>
+                <label className={styles.label}>MESSAGE DETAILS</label>
                 <textarea
                   className={styles.textarea}
                   rows={5}

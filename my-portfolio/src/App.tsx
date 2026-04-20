@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
+import Project from "./pages/Projects/Project";
 import Experience from "./pages/Experience/Experience";
 import Contact from "./pages/Contacts/Contact";
 import Footer from "./components/Footer";
@@ -13,6 +14,7 @@ const App: React.FC = () => {
   const homeRef = useRef<HTMLElement | null>(null);
   const aboutRef = useRef<HTMLElement | null>(null);
   const experienceRef = useRef<HTMLElement | null>(null);
+  const projectRef = useRef<HTMLElement | null>(null);
   const contactRef = useRef<HTMLElement | null>(null);
 
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
@@ -42,11 +44,12 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <Navbar scrollToSection={scrollToSection} refs={{ homeRef, aboutRef, experienceRef, contactRef }} theme={theme} onToggleTheme={toggleTheme} />
+      <Navbar scrollToSection={scrollToSection} refs={{ homeRef, aboutRef, experienceRef, projectRef, contactRef }} theme={theme} onToggleTheme={toggleTheme} />
 
       <section id="home" ref={homeRef}><Home /></section>
       <section id="about" ref={aboutRef}><About /></section>
       <section id="experience" ref={experienceRef}><Experience /></section>
+      <section id="project" ref={projectRef}><Project /></section>
       <section id="contact" ref={contactRef}><Contact /></section>
 
       <Footer />

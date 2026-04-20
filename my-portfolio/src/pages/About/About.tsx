@@ -22,7 +22,6 @@ const About: React.FC = () => {
 
         {/* ── Left column ── */}
         <div className={styles.left}>
-          <p className={styles.kicker}>SOFTWARE ENGINEER · UWATERLOO</p>
 
           <h1 className={styles.heading}>
             Building things that{" "}
@@ -32,17 +31,10 @@ const About: React.FC = () => {
           </h1>
 
           <p className={styles.bio}>
-            I'm <strong>Zora</strong>, a third-year Software Engineering student at the
-            University of Waterloo. I thrive at the intersection of robust systems and
-            thoughtful product design — writing code that's efficient, readable, and
-            actually fun to work with.
+          I'm <strong>Zora</strong>, a Software Engineering student at the
+          University of Waterloo. I enjoy building systems that are reliable, clean, and
+          actually pleasant to work with.
           </p>
-          <p className={styles.bio}>
-            My "lab" is wherever the hard problems are — whether that's real-time robot
-            diagnostics, ML pipelines for visual inspection, or building dashboards
-            people actually enjoy using.
-          </p>
-
           <div className={styles.skills}>
             {SKILLS.map(({ label, pct }) => (
               <div key={label} className={styles.skillRow}>
@@ -73,8 +65,7 @@ const About: React.FC = () => {
           <div className={styles.photoCard}>
             <img src={img1} alt="Zora Liu" className={styles.photo} />
             <div className={styles.devBadge}>
-              <span className={styles.devBadgeIcon}>&gt;_</span>
-              CREATIVE_DEV.V1
+              <span className={styles.devBadgeIcon}>;-)</span>
             </div>
           </div>
         </div>
@@ -86,7 +77,7 @@ const About: React.FC = () => {
         <div className={styles.philosophyCell}>
           <AutoStoriesIcon fontSize="small" style={{ color: 'var(--accent)' }} />
           <h3>The Philosophy</h3>
-          <p>Good software isn't just functional — it should be clear, fast, and leave the next developer smiling.</p>
+          <p>I try to stay curious, do things with intention, and leave things a little better than I found them.</p>
         </div>
         {STATS.map(({ value, label }) => (
           <div key={label} className={styles.statCell}>
