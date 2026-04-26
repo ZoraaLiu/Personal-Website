@@ -40,6 +40,24 @@ const App: React.FC = () => {
     window.localStorage.setItem("theme", theme);
   }, [theme]);
 
+  // Scroll-reveal: observe all [data-reveal] elements
+  useEffect(() => {
+    const observe = () => {
+      const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
+      const obs = new IntersectionObserver(
+        (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+      );
+      els.forEach((el) => obs.observe(el));
+      return obs;
+    };
+    // Run once now, then again after a short delay so dynamically-rendered
+    // elements (e.g. 3-D canvas) are in the DOM
+    const obs1 = observe();
+    const tid = setTimeout(() => observe(), 400);
+    return () => { obs1.disconnect(); clearTimeout(tid); };
+  }, []);
+
   const toggleTheme = () => setTheme(prev => (prev === "dark" ? "light" : "dark"));
 
   return (

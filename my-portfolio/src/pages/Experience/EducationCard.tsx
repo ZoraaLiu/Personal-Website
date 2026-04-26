@@ -6,7 +6,7 @@ type EducationCardProps = Education & { id: string };
 
 export default function EducationCard({ id, title, school, graduationYear, description }: EducationCardProps) {
     return (
-        <div id={id} className={styles.educationCard}>
+        <div id={id} className={styles.educationCard} data-reveal>
             <div className={styles.eduCardTop}>
                 <span className={styles.iconBox2}>
                     <LibraryBooksIcon fontSize="small" />

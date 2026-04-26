@@ -507,9 +507,10 @@ interface OverlayProps {
   onStart:  () => void;
   onDrop:   () => void;
   onAxis:   (axis: "x" | "z", v: number) => void;
+  onExit:   () => void;
 }
 
-function GameOverlay({ phase, score, inputRef, onStart, onDrop, onAxis }: OverlayProps) {
+function GameOverlay({ phase, score, inputRef, onStart, onDrop, onAxis, onExit }: OverlayProps) {
   const isIdle   = phase === "idle";
   const isEnding = phase === "ending";
   const isActive = !isIdle && !isEnding;
@@ -541,6 +542,13 @@ function GameOverlay({ phase, score, inputRef, onStart, onDrop, onAxis }: Overla
       {/* Active HUD */}
       {isActive && (
         <>
+          <button
+            className={styles.exitBtn}
+            onClick={onExit}
+            aria-label="Exit game"
+            title="Exit (Esc)"
+          >✕</button>
+
           <div className={styles.scoreDisplay}>
             <span className={styles.scoreLabel}>SCORE</span>
             <span className={styles.scoreValue}>{score}</span>
@@ -644,11 +652,30 @@ const CraneMachine3D: React.FC = () => {
   const fireDrop  = () => { if (phaseRef.current === "playing") inputRef.current.drop  = true; };
   const fireStart = () => { if (phaseRef.current === "idle")    inputRef.current.start = true; };
 
+  const handleExit = useCallback(() => {
+    inputRef.current = { x: 0, z: 0, drop: false, start: false };
+    setScore(0);
+    setResetSignal((n) => n + 1);
+    phaseRef.current = "idle";
+    setPhase("idle");
+  }, []);
+
+  // Escape key exits the game
+  useEffect(() => {
+    const onEscKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && phaseRef.current !== "idle" && phaseRef.current !== "ending") {
+        handleExit();
+      }
+    };
+    window.addEventListener("keydown", onEscKey);
+    return () => window.removeEventListener("keydown", onEscKey);
+  }, [handleExit]);
+
   return (
     <div className={styles.container}>
       <Canvas
         className={styles.canvas}
-        camera={{ fov: 38, near: 0.1, far: 50, position: [1.6, 1.8, 3.4] }}
+        camera={{ fov: 34, near: 0.1, far: 50, position: [1.5, 1.75, 2.9] }}
         shadows
         gl={{
           alpha: true,
@@ -686,8 +713,8 @@ const CraneMachine3D: React.FC = () => {
           autoRotateSpeed={0.8}
           minPolarAngle={Math.PI / 6}
           maxPolarAngle={Math.PI / 2.1}
-          minDistance={2.2}
-          maxDistance={5.5}
+          minDistance={1.9}
+          maxDistance={4.9}
           target={[0, 0.3, 0]}
         />
       </Canvas>
@@ -699,6 +726,7 @@ const CraneMachine3D: React.FC = () => {
         onStart={fireStart}
         onDrop={fireDrop}
         onAxis={setAxis}
+        onExit={handleExit}
       />
     </div>
   );

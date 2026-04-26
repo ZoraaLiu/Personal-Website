@@ -1,22 +1,376 @@
 .project {
-  width: 100vw;
-  min-height: 40vh;
-  padding: 80px 20px;
+  width: 100%;
   background: var(--bg);
   color: var(--text);
+  padding: 96px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.wrapper {
+  max-width: 1120px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: 44px;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
   text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
-.project h1 {
-  margin: 0 0 12px 0;
-  font-size: 2rem;
+.kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.76rem;
+  color: var(--secondary);
+  font-weight: 700;
 }
 
-.placeholder {
+.header h2 {
+  margin: 14px 0 12px;
+  font-size: clamp(2.05rem, 5vw, 3.2rem);
+  line-height: 1.08;
+}
+
+.subtitle {
   margin: 0;
   color: var(--muted);
+  font-size: 1.03rem;
+  line-height: 1.6;
+}
+
+.dragHint {
+  margin: 14px 0 0;
+  color: color-mix(in srgb, var(--muted) 85%, transparent);
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+}
+
+.gridShell {
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(
+      circle at 12% 10%,
+      color-mix(in srgb, var(--secondary-soft) 55%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 88% 18%,
+      color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+      transparent 58%
+    ),
+    color-mix(in srgb, var(--bg-alt) 82%, transparent);
+  border-radius: 30px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.card {
+  min-height: 208px;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  background:
+    linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--card) 92%, transparent),
+      color-mix(in srgb, var(--bg) 84%, transparent)
+    );
+  border-radius: 28px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 28px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--secondary) 38%, transparent),
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 66%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--secondary) 42%, var(--border));
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.14),
+    0 0 0 1px color-mix(in srgb, var(--secondary) 16%, transparent) inset;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.cardDragging {
+  opacity: 0.72;
+  transform: scale(0.98);
+}
+
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardIndex {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: color-mix(in srgb, var(--muted) 75%, transparent);
+}
+
+.cardGlyph {
+  font-size: 1.1rem;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.cardTitle {
+  margin: 8px 0 8px;
+  font-size: 1.1rem;
+  line-height: 1.35;
+}
+
+.cardDescription {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.9rem;
+}
+
+.tags {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  font-size: 0.72rem;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--secondary-soft) 35%, transparent);
+  color: var(--text);
+}
+
+.link {
+  margin-top: auto;
+  padding-top: 14px;
+  font-size: 0.86rem;
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--secondary) 30%, var(--border));
+  background: color-mix(in srgb, var(--card) 86%, transparent);
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.link:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--secondary) 48%, var(--border));
+  background: color-mix(in srgb, var(--secondary-soft) 22%, var(--card));
+}
+
+.insight {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.insightVisual {
+  min-height: 290px;
+  border-radius: 30px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--secondary) 34%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 18%, transparent) 28%,
+      rgba(0, 0, 0, 0) 62%
+    ),
+    linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--bg-alt) 88%, var(--bg) 12%),
+      color-mix(in srgb, var(--card) 70%, var(--bg) 30%)
+    );
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.ring {
+  width: min(60%, 280px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--secondary) 45%, var(--border));
+  box-shadow:
+    0 0 0 20px color-mix(in srgb, var(--secondary) 10%, transparent),
+    0 0 0 48px color-mix(in srgb, var(--accent) 9%, transparent);
+}
+
+.insightContent {
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 26px;
+  background:
+    radial-gradient(
+      circle at 20% 12%,
+      color-mix(in srgb, var(--secondary-soft) 52%, transparent) 0%,
+      transparent 56%
+    ),
+    color-mix(in srgb, var(--bg-alt) 88%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.insightHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.insightKicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.nextButton {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  color: var(--text);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.nextButton:hover {
+  border-color: color-mix(in srgb, var(--secondary) 45%, var(--border));
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.insightContent h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+}
+
+.insightContent p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.insightList {
+  margin-top: 8px;
+  display: grid;
+  gap: 10px;
+}
+
+.insightItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  font-size: 0.92rem;
+}
+
+.insightDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--secondary);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--secondary-soft) 80%, transparent);
+}
+
+@media (max-width: 1024px) {
+  .gridShell {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .project {
+    padding: 80px 18px;
+  }
+
+  .gridShell {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: 24px;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .card {
+    min-height: 194px;
+    border-radius: 20px;
+    padding: 14px;
+  }
+
+  .insight {
+    grid-template-columns: 1fr;
+  }
+
+  .insightVisual,
+  .insightContent {
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 520px) {
+  .gridShell {
+    grid-template-columns: 1fr;
+  }
 }

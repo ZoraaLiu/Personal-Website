@@ -6,7 +6,7 @@ import SchoolIcon from '@mui/icons-material/School';
 export default function EducationSection() {
   return (
     <div className={styles.contentSection}>
-      <div className={styles.sectionTitle}>
+      <div className={styles.sectionTitle} data-reveal>
         <span className={styles.iconBox2}>
           <SchoolIcon fontSize="small" />
         </span>

@@ -16,7 +16,7 @@
     overflow-y: visible;
   }
   
-  /* Decorative animated blobs */
+  /* Decorative animated blobs — kept very subtle */
   .home::before,
   .home::after {
     content: "";
@@ -25,8 +25,8 @@
     height: 420px;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, var(--accent), transparent 60%);
-    opacity: 0.18;
-    filter: blur(30px);
+    opacity: 0.07;
+    filter: blur(50px);
     animation: floaty 12s ease-in-out infinite;
     pointer-events: none;
   }
@@ -69,9 +69,9 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    min-height: 520px;
-    height: 70vh;
-    max-height: 700px;
+    min-height: 620px;
+    height: 78vh;
+    max-height: 860px;
     overflow: hidden;
   }
   
@@ -105,10 +105,7 @@
   .nameBack {
     display: inline-block;
     transition: opacity 0.5s ease;
-    background: linear-gradient(90deg, var(--text), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--text);
   }
   
   /* By default show only nickname */
@@ -178,8 +175,8 @@
       width: 100%;
       max-width: 100%;
       min-height: 280px;
-      height: min(42vh, 380px);
-      max-height: min(42vh, 380px);
+      height: min(50vh, 460px);
+      max-height: min(50vh, 460px);
     }
 
     .heroTitle { font-size: 2.4rem; }
@@ -196,8 +193,8 @@
 
     .sceneContainer {
       min-height: 240px;
-      height: min(38vh, 320px);
-      max-height: min(38vh, 320px);
+      height: min(44vh, 380px);
+      max-height: min(44vh, 380px);
     }
 
     .heroTitle {

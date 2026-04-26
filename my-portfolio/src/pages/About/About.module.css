@@ -204,7 +204,6 @@
   top: 8px;
   left: 8px;
   font-size: 1.8rem;
-  filter: drop-shadow(0 0 6px var(--accent-glow));
   animation: wobble 4s ease-in-out infinite;
   z-index: 2;
 }
@@ -214,7 +213,6 @@
   right: 4px;
   top: 50%;
   font-size: 1.4rem;
-  filter: drop-shadow(0 0 6px var(--accent-glow-strong));
   animation: wobble 5s ease-in-out infinite reverse;
   z-index: 2;
 }
@@ -225,7 +223,6 @@
   right: 10px;
   font-size: 1.6rem;
   color: var(--secoundy-header);
-  filter: drop-shadow(0 0 8px var(--secondary-soft));
   animation: wobble 3.5s ease-in-out infinite;
   z-index: 2;
 }

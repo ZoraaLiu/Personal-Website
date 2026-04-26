@@ -48,18 +48,28 @@
   --secoundy-header: #B9E9E9;
 }
 
-/* Global subtle reveal utility (optional usage) */
+/* ── Scroll-reveal ──────────────────────────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+[data-reveal].visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Legacy — kept for compatibility */
 .reveal {
   opacity: 0;
   transform: translateY(8px);
   animation: fadeUp 0.6s ease-out forwards;
 }
-
 @keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 html {
