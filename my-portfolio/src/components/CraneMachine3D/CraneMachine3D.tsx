@@ -9,6 +9,7 @@ import {
   EffectComposer,
   ToneMapping,
   Vignette,
+  Bloom,
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 import {
@@ -20,6 +21,7 @@ import {
   type MutableRefObject,
 } from "react";
 import * as THREE from "three";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import styles from "./CraneMachine3D.module.css";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -67,10 +69,55 @@ const DROP_ZONE_X  = 0.30;
 const DROP_ZONE_Z  = 0.22;
 const WIN_DELAY_MS = 3500;
 
-// Camera positions
-const CAM_IDLE    = new THREE.Vector3(1.6, 1.8, 3.4);
-const CAM_PLAY    = new THREE.Vector3(0.0, 1.4, 3.2);
-const LOOK_AT     = new THREE.Vector3(0, 0.3, 0);
+// Camera framing — only DIRECTIONS are constant.
+// Distance, near, far, and OrbitControls limits are derived at runtime
+// from the actual model bounding box + current viewport aspect ratio.
+const IDLE_CAM_DIR = new THREE.Vector3(0.45, 0.50, 1).normalize();
+const PLAY_CAM_DIR = new THREE.Vector3(0.00, 0.45, 1).normalize();
+const FIT_PADDING_IDLE = 1.08;   // 1.0 = exactly fits, >1 = breathing room
+const FIT_PADDING_PLAY = 1.04;   // slightly tighter during gameplay
+const CAM_FOV          = 34;     // vertical FOV (degrees)
+
+// ─── Fit utilities (no model rescaling, only camera math) ─────────────────────
+type FitData = {
+  center: THREE.Vector3;  // bbox center in world space *before* centering
+  radius: number;         // bounding sphere radius (used for near/far only)
+  size:   THREE.Vector3;  // bbox dimensions
+  baseY:  number;         // y of model bottom *after* centering at origin
+};
+
+/**
+ * Distance needed to fit the model's bbox into the frustum from `dir`.
+ * Projects the (origin-centered) bbox onto the camera's view plane and
+ * solves for the distance that inscribes that 2-D projection — much
+ * tighter than a bounding-sphere fit for non-cubic models.
+ */
+function computeCameraDistance(
+  fovDeg: number,
+  aspect: number,
+  size: THREE.Vector3,
+  dir: THREE.Vector3,
+  padding: number,
+): number {
+  const fovV = THREE.MathUtils.degToRad(fovDeg);
+  const fovH = 2 * Math.atan(Math.tan(fovV / 2) * Math.max(aspect, 0.0001));
+
+  // Camera basis from dir (assumes world-up = +Y).
+  const worldUp = new THREE.Vector3(0, 1, 0);
+  const right   = new THREE.Vector3().crossVectors(dir, worldUp).normalize();
+  // Fallback if dir is parallel to world-up.
+  if (!isFinite(right.x) || right.lengthSq() < 1e-6) right.set(1, 0, 0);
+  const upCam   = new THREE.Vector3().crossVectors(right, dir).normalize();
+
+  // Projected bbox extents = sum of |basis · axis| · sizeAxis (axis-aligned bbox).
+  const projW = size.x * Math.abs(right.x) + size.y * Math.abs(right.y) + size.z * Math.abs(right.z);
+  const projH = size.x * Math.abs(upCam.x) + size.y * Math.abs(upCam.y) + size.z * Math.abs(upCam.z);
+
+  // Distance to inscribe each axis of the projected bbox.
+  const distV = (projH / 2) / Math.tan(fovV / 2);
+  const distH = (projW / 2) / Math.tan(fovH / 2);
+  return Math.max(distV, distH) * padding;
+}
 
 // ─── Theme observer ───────────────────────────────────────────────────────────
 function useThemeObserver(): Theme {
@@ -89,54 +136,181 @@ function useThemeObserver(): Theme {
   return theme;
 }
 
-// ─── Camera controller ────────────────────────────────────────────────────────
-function CameraController({ phase }: { phase: GamePhase }) {
-  const { camera } = useThree();
-  const target  = useRef(CAM_IDLE.clone());
-  const look    = useRef(LOOK_AT.clone());
-  const managed = useRef(false);
+// ─── Responsive camera (model-fit, resize-aware) ──────────────────────────────
+interface ResponsiveCameraProps {
+  phase:        GamePhase;
+  fit:          FitData | null;
+  controlsRef:  MutableRefObject<OrbitControlsImpl | null>;
+}
 
+function ResponsiveCamera({ phase, fit, controlsRef }: ResponsiveCameraProps) {
+  const { camera, size } = useThree();
+  const targetPos    = useRef(new THREE.Vector3());
+  const targetLookAt = useRef(new THREE.Vector3(0, 0, 0));
+  const managed      = useRef(false);
+
+  // Recompute camera distance + near/far + control limits.
+  // `snap` snaps the camera to the new framing immediately (use on idle / load).
+  const applyFit = useCallback((snap: boolean) => {
+    if (!fit) return;
+    const cam     = camera as THREE.PerspectiveCamera;
+    const aspect  = size.width / Math.max(size.height, 1);
+    const isIdle  = phase === "idle" || phase === "ending";
+    const dir     = isIdle ? IDLE_CAM_DIR : PLAY_CAM_DIR;
+    const padding = isIdle ? FIT_PADDING_IDLE : FIT_PADDING_PLAY;
+
+    const distance = computeCameraDistance(cam.fov, aspect, fit.size, dir, padding);
+
+    // Near / far clipping planes derived from distance ± radius (with margin).
+    cam.near = Math.max(0.05, distance - fit.radius * 1.6);
+    cam.far  = distance + fit.radius * 8;
+    cam.updateProjectionMatrix();
+
+    // Centered model is at world origin → look-at is origin.
+    targetLookAt.current.set(0, 0, 0);
+    targetPos.current.set(0, 0, 0).addScaledVector(dir, distance);
+
+    // OrbitControls limits + target (no hardcoded numbers).
+    const ctrl = controlsRef.current;
+    if (ctrl) {
+      ctrl.target.set(0, 0, 0);
+      ctrl.minDistance = distance * 0.60;
+      ctrl.maxDistance = distance * 1.70;
+      ctrl.update();
+    }
+
+    if (snap || isIdle) {
+      // Idle: OrbitControls owns the camera. Preserve current orbit direction
+      // (so resize doesn't re-frame the auto-rotate angle) but update radius.
+      if (isIdle && !snap) {
+        const dirToCam = cam.position.clone().sub(targetLookAt.current);
+        const len = dirToCam.length();
+        if (len > 1e-4) {
+          dirToCam.multiplyScalar(distance / len);
+          cam.position.copy(targetLookAt.current).add(dirToCam);
+        } else {
+          cam.position.copy(targetPos.current);
+        }
+      } else {
+        cam.position.copy(targetPos.current);
+      }
+      cam.lookAt(targetLookAt.current);
+      managed.current = false;
+    } else {
+      managed.current = true;
+    }
+  }, [camera, controlsRef, fit, phase, size.width, size.height]);
+
+  // Initial fit when model becomes ready.
   useEffect(() => {
-    if (phase === "idle" || phase === "ending") { managed.current = false; return; }
-    managed.current = true;
-    target.current.copy(CAM_PLAY);
-  }, [phase]);
+    if (!fit) return;
+    applyFit(true);
+  }, [fit, applyFit]);
 
+  // Phase change → animate to new framing (or hand back to OrbitControls).
+  useEffect(() => {
+    applyFit(false);
+  }, [phase, applyFit]);
+
+  // Viewport resize → re-fit camera distance.
+  useEffect(() => {
+    if (!fit) return;
+    applyFit(false);
+  }, [size.width, size.height, fit, applyFit]);
+
+  // Smoothly animate to target during managed (gameplay) phases.
   useFrame((_, delta) => {
     if (!managed.current) return;
     const t = 1 - Math.pow(0.0001, Math.min(delta, 0.05) * 5);
-    camera.position.lerp(target.current, t);
-    look.current.lerp(LOOK_AT, t);
-    camera.lookAt(look.current);
+    camera.position.lerp(targetPos.current, t);
+    camera.lookAt(targetLookAt.current);
   });
 
   return null;
 }
 
 // ─── Lighting ─────────────────────────────────────────────────────────────────
-function SceneLighting({ theme }: { theme: Theme }) {
+// Night: warm, intimate, lantern/arcade vibe (cozy).
+// Day:   bright, clean, slightly warm whites (showroom).
+// The internal "lamp" position + reach are derived from fit data so it sits
+// inside the cabinet regardless of model size.
+function SceneLighting({ theme, fit }: { theme: Theme; fit: FitData | null }) {
   const isDark = theme === "dark";
+
+  // Internal lamp placed roughly mid-cabinet (above toy floor).
+  const lampY    = fit ? fit.baseY + fit.size.y * 0.55 : 0.65;
+  const lampDist = fit ? Math.max(fit.size.x, fit.size.z) * 1.8 : 1.6;
+
   return (
     <>
-      <ambientLight intensity={isDark ? 0.30 : 0.50} color={isDark ? "#c4ceee" : "#fff5f8"} />
-      <directionalLight position={[3, 9, 5]} intensity={isDark ? 1.1 : 1.5} color="#fffaf5"
-        castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-bias={-0.0002} />
-      <spotLight position={[-2.5, 3.5, -3]} angle={0.45} penumbra={0.7}
-        intensity={isDark ? 1.4 : 0.9} color={isDark ? "#f9a8d4" : "#fbbcda"} />
-      <pointLight position={[0, 0.65, 0]} intensity={isDark ? 0.55 : 0.35}
-        color="#ffe4b8" distance={1.6} decay={2} />
-      <directionalLight position={[-4, 3, 2]} intensity={isDark ? 0.45 : 0.55}
-        color={isDark ? "#c8d0e8" : "#fff8f5"} />
+      {/* Ambient base — gentle warm at night, bright & neutral by day */}
+      <ambientLight
+        intensity={isDark ? 0.32 : 0.55}
+        color={isDark ? "#dcd0d8" : "#fff8f0"}
+      />
+
+      {/* Key — softly warm at night, clean white sun by day */}
+      <directionalLight
+        position={[3, 9, 5]}
+        intensity={isDark ? 0.95 : 1.6}
+        color={isDark ? "#ffe6c4" : "#fff8f0"}
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0002}
+      />
+
+      {/* Pink accent — subtle blush at night, hint of pink by day */}
+      <spotLight
+        position={[-2.8, 3.4, -2.2]}
+        angle={0.55}
+        penumbra={0.9}
+        intensity={isDark ? 0.95 : 0.7}
+        color={isDark ? "#f7b8d0" : "#fbbcda"}
+      />
+
+      {/* Cool back-rim — gives separation so warm tones read warm */}
+      <directionalLight
+        position={[-4, 2.5, -3.5]}
+        intensity={isDark ? 0.35 : 0.30}
+        color={isDark ? "#c8d4ec" : "#eef4ff"}
+      />
+
+      {/* Soft front fill — keeps faces out of pure shadow */}
+      <directionalLight
+        position={[-4, 3, 2]}
+        intensity={isDark ? 0.40 : 0.55}
+        color={isDark ? "#ffe8d4" : "#fff8f5"}
+      />
+
+      {/* Inside-the-cabinet warm glow (the "lamp" inside the machine) */}
+      <pointLight
+        position={[0, lampY, 0]}
+        intensity={isDark ? 0.75 : 0.45}
+        color={isDark ? "#ffc88a" : "#fff0d4"}
+        distance={lampDist}
+        decay={2}
+      />
     </>
   );
 }
 
-function GroundShadow({ theme }: { theme: Theme }) {
+function GroundShadow({ theme, fit }: { theme: Theme; fit: FitData | null }) {
   const isDark = theme === "dark";
+  // Tight shadow footprint — just a touch wider than the machine base.
+  const y     = fit ? fit.baseY - 0.005 : -1.02;
+  const scale = fit ? Math.max(fit.size.x, fit.size.z) * 1.6 : 3;
+  const far   = fit ? fit.size.y * 0.6 : 2;
   return (
-    <ContactShadows position={[0, -1.02, 0]} opacity={isDark ? 0.38 : 0.28}
-      scale={8} blur={2.8} far={3} resolution={256}
-      color={isDark ? "#0a0f20" : "#6b7280"} />
+    <ContactShadows
+      position={[0, y, 0]}
+      opacity={isDark ? 0.32 : 0.18}
+      scale={scale}
+      blur={2.0}
+      far={far}
+      resolution={512}
+      color={isDark ? "#0a0f20" : "#5e6679"}
+    />
   );
 }
 
@@ -151,16 +325,20 @@ function Loader() {
 
 // ─── Game model + loop ────────────────────────────────────────────────────────
 interface GameModelProps {
-  inputRef:      MutableRefObject<InputState>;
-  phaseRef:      MutableRefObject<GamePhase>;
-  onPhaseChange: (p: GamePhase) => void;
-  onScore:       () => void;
-  resetSignal:   number; // increment to trigger toy reset
+  inputRef:       MutableRefObject<InputState>;
+  phaseRef:       MutableRefObject<GamePhase>;
+  onPhaseChange:  (p: GamePhase) => void;
+  onScore:        () => void;
+  onFitComputed:  (fit: FitData) => void;
+  resetSignal:    number; // increment to trigger toy reset
 }
 
-function GameModel({ inputRef, phaseRef, onPhaseChange, onScore, resetSignal }: GameModelProps) {
-  const { scene } = useGLTF(MODEL_PATH);
-  const groupRef  = useRef<THREE.Group>(null);
+function GameModel({
+  inputRef, phaseRef, onPhaseChange, onScore, onFitComputed, resetSignal,
+}: GameModelProps) {
+  const { scene }      = useGLTF(MODEL_PATH);
+  const groupRef       = useRef<THREE.Group>(null);   // bob wrapper
+  const offsetGroupRef = useRef<THREE.Group>(null);   // centering wrapper
 
   // Node refs
   const carriageRef = useRef<THREE.Object3D | null>(null);
@@ -240,7 +418,33 @@ function GameModel({ inputRef, phaseRef, onPhaseChange, onScore, resetSignal }: 
       `toys=[${toys.map((t) => t.name).join(",")}]`,
       `restY=${restY.current.toFixed(3)} dropY=${dropY.current.toFixed(3)}`,
     );
-  }, [scene]);
+
+    // ── Center the model + report fit data ───────────────────────────────
+    // Reset the centering wrapper to identity before measuring so repeated
+    // mounts (HMR) measure the model's natural extents.
+    const offset = offsetGroupRef.current;
+    if (!offset) return;
+    offset.position.set(0, 0, 0);
+    offset.updateMatrixWorld(true);
+
+    const bbox = new THREE.Box3().setFromObject(scene);
+    if (!isFinite(bbox.min.x) || !isFinite(bbox.max.x)) return;
+
+    const sphere = new THREE.Sphere();
+    bbox.getBoundingSphere(sphere);
+    const sizeV = new THREE.Vector3();
+    bbox.getSize(sizeV);
+
+    // Translate so bbox center sits exactly at world origin.
+    offset.position.set(-sphere.center.x, -sphere.center.y, -sphere.center.z);
+
+    onFitComputed({
+      center: sphere.center.clone(),
+      radius: sphere.radius,
+      size:   sizeV.clone(),
+      baseY:  -sizeV.y / 2,
+    });
+  }, [scene, onFitComputed]);
 
   // ── Restore toys when resetSignal increments ─────────────────────────
   useEffect(() => {
@@ -421,7 +625,9 @@ function GameModel({ inputRef, phaseRef, onPhaseChange, onScore, resetSignal }: 
 
   return (
     <group ref={groupRef}>
-      <primitive object={scene} />
+      <group ref={offsetGroupRef}>
+        <primitive object={scene} />
+      </group>
     </group>
   );
 }
@@ -594,9 +800,13 @@ const CraneMachine3D: React.FC = () => {
   const [phase,       setPhase]       = useState<GamePhase>("idle");
   const [score,       setScore]       = useState(0);
   const [resetSignal, setResetSignal] = useState(0);
+  const [fit,         setFit]         = useState<FitData | null>(null);
 
-  const phaseRef = useRef<GamePhase>("idle");
-  const inputRef = useRef<InputState>({ x: 0, z: 0, drop: false, start: false });
+  const phaseRef    = useRef<GamePhase>("idle");
+  const inputRef    = useRef<InputState>({ x: 0, z: 0, drop: false, start: false });
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+
+  const handleFit = useCallback((f: FitData) => setFit(f), []);
 
   // Keep phaseRef in sync
   useEffect(() => { phaseRef.current = phase; }, [phase]);
@@ -675,7 +885,7 @@ const CraneMachine3D: React.FC = () => {
     <div className={styles.container}>
       <Canvas
         className={styles.canvas}
-        camera={{ fov: 34, near: 0.1, far: 50, position: [1.5, 1.75, 2.9] }}
+        camera={{ fov: CAM_FOV, near: 0.1, far: 50, position: [0, 0, 5] }}
         shadows
         gl={{
           alpha: true,
@@ -685,8 +895,8 @@ const CraneMachine3D: React.FC = () => {
         }}
         dpr={[1.5, 2]}
       >
-        <CameraController phase={phase} />
-        <SceneLighting theme={theme} />
+        <ResponsiveCamera phase={phase} fit={fit} controlsRef={controlsRef} />
+        <SceneLighting theme={theme} fit={fit} />
 
         <Suspense fallback={<Loader />}>
           <GameModel
@@ -694,18 +904,42 @@ const CraneMachine3D: React.FC = () => {
             phaseRef={phaseRef}
             onPhaseChange={handlePhaseChange}
             onScore={() => setScore((s) => s + 1)}
+            onFitComputed={handleFit}
             resetSignal={resetSignal}
           />
-          <GroundShadow theme={theme} />
-          <Environment preset="apartment" environmentIntensity={isDark ? 0.3 : 0.4} />
+          <GroundShadow theme={theme} fit={fit} />
+          {/* Slightly lower env at night so placed lights still set the mood. */}
+          <Environment
+            preset="apartment"
+            environmentIntensity={isDark ? 0.32 : 0.45}
+          />
         </Suspense>
 
-        <EffectComposer multisampling={8}>
-          <Vignette eskil={false} offset={0.35} darkness={isDark ? 0.35 : 0.12} />
+        {/* Theme-keyed composer so adding/removing Bloom doesn't flicker. */}
+        <EffectComposer key={isDark ? "dark" : "light"} multisampling={8}>
+          {/* Subtle cozy halo — only catches the highlights, not the whole scene. */}
+          {isDark ? (
+            <Bloom
+              intensity={0.22}
+              luminanceThreshold={0.78}
+              luminanceSmoothing={0.5}
+              mipmapBlur
+            />
+          ) : (
+            <></>
+          )}
+          {/* Vignette only at night (day mode keeps the canvas clean over
+              the page background so we don't get a faint corner ring). */}
+          {isDark ? (
+            <Vignette eskil={false} offset={0.32} darkness={0.28} />
+          ) : (
+            <></>
+          )}
           <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         </EffectComposer>
 
         <OrbitControls
+          ref={controlsRef}
           enablePan={false}
           enableZoom={phase === "idle"}
           autoRotate={phase === "idle"}
@@ -713,9 +947,8 @@ const CraneMachine3D: React.FC = () => {
           autoRotateSpeed={0.8}
           minPolarAngle={Math.PI / 6}
           maxPolarAngle={Math.PI / 2.1}
-          minDistance={1.9}
-          maxDistance={4.9}
-          target={[0, 0.3, 0]}
+          // minDistance / maxDistance / target are set by ResponsiveCamera
+          // based on the actual model bounding box.
         />
       </Canvas>
 
