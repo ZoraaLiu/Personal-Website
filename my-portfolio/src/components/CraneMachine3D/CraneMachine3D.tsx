@@ -53,7 +53,7 @@ type ToySnapshot = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 const MODEL_PATH   = `${import.meta.env.BASE_URL}models/crane_machine.glb`;
 const PRONG_BELOW  = 0.30;
-const GRAB_RADIUS  = 0.38;
+const GRAB_RADIUS  = 0.2;
 const GRAB_PAUSE   = 0.18;
 const XZ_SPEED     = 1.4;
 const XZ_LERP      = 12.0;
