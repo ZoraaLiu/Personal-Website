@@ -68,10 +68,3 @@ cd Personal-Website/my-portfolio
 npm install
 npm run dev
 ```
-
-For the contact form, copy `.env.example` → `.env.local` and fill in `VITE_FORMSPREE_ENDPOINT`. Without it the form falls back to `mailto:`.
-
-```bash
-npm run build   # type-check + build
-npm run deploy  # push to GitHub Pages
-```
